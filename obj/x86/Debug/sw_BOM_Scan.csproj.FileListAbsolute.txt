@@ -1,0 +1,13 @@
+D:\dev\sw_BOM_Scan\trunk\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\dev\sw_BOM_Scan\trunk\obj\x86\Debug\sw_BOM_Scan.MainForm.resources
+D:\dev\sw_BOM_Scan\trunk\obj\x86\Debug\sw_BOM_Scan.csproj.GenerateResource.Cache
+D:\dev\sw_BOM_Scan\trunk\bin\Debug\sw_BOM_Scan.exe
+D:\dev\sw_BOM_Scan\trunk\bin\Debug\sw_BOM_Scan.pdb
+D:\dev\sw_BOM_Scan\trunk\bin\Debug\System.Data.SQLite.dll
+D:\dev\sw_BOM_Scan\trunk\bin\Debug\System.Data.SQLite.xml
+D:\dev\sw_BOM_Scan\trunk\obj\x86\Debug\sw_BOM_Scan.exe
+D:\dev\sw_BOM_Scan\trunk\obj\x86\Debug\sw_BOM_Scan.pdb
+D:\dev\sw_BOM_Scan\trunk\bin\Debug\SolidWorks.Interop.sldworks.dll
+D:\dev\sw_BOM_Scan\trunk\bin\Debug\SolidWorks.Interop.swbrowser.dll
+D:\dev\sw_BOM_Scan\trunk\bin\Debug\SolidWorks.Interop.swcommands.dll
+D:\dev\sw_BOM_Scan\trunk\bin\Debug\SolidWorks.Interop.swconst.dll
