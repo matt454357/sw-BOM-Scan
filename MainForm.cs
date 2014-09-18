@@ -665,7 +665,7 @@ namespace sw_BOM_Scan
 			// get children for each Child in this subassembly
 			foreach ( Component2 swChildComp in aChildren ) {
 				
-				// Skip suppressed parts
+				// Skip suppressed/excluded parts
 				if ( (swComponentSuppressionState_e)swChildComp.GetSuppression() != swComponentSuppressionState_e.swComponentSuppressed && !swChildComp.ExcludeFromBOM ) {
 					
 					// Get the model doc and info of the component
@@ -781,7 +781,7 @@ namespace sw_BOM_Scan
 					string strVal = null;
 					string strResolved = null;
 					
-					swCustPropMgr.Get3(strPropName, true, out strVal, out strResolved);
+					swCustPropMgr.Get4(strPropName, true, out strVal, out strResolved);
 					
 				}
 				
@@ -801,7 +801,6 @@ namespace sw_BOM_Scan
 			// Everything else should be copied exactly.
 			//
 			
-			
 			// Return if the config properties have already been written
 			cmdCheckConfigs.Parameters[0].Value = strPathName;
 			cmdCheckConfigs.Parameters[1].Value = strConfigName;
@@ -810,26 +809,24 @@ namespace sw_BOM_Scan
 				return;
 			}
 			
-			// Get model doc
-			ModelDoc2 swModelDoc = (ModelDoc2)swComp.GetModelDoc2();
-			
 			// Write status to form label
 			MethodInvoker WriteLabelDelegate = new MethodInvoker(WriteLabel);
 			string strModelName = this.statLabel;
 			this.statLabel = strModelName + "(" + strConfigName + ")" + " ... getting custom properties";
 			Invoke(WriteLabelDelegate);
 			
-			// Get property manager
-			string strWorkingConfig = strConfigName;
+			// Get model doc extension
+			ModelDoc2 swModelDoc = (ModelDoc2)swComp.GetModelDoc2();
 			ModelDocExtension swModelDocExt = (ModelDocExtension)swModelDoc.Extension;
+			
+			// Get property manager for this config
 			CustomPropertyManager swCustPropMgr = (CustomPropertyManager)swModelDocExt.get_CustomPropertyManager(strConfigName);
-			Configuration swConfig = (Configuration)swModelDoc.GetConfigurationByName(strConfigName);
-			
-			// Get property manager for "" (Standard config)
+
+            // Get property manager for file-system-level (name of standard config = "")
 			CustomPropertyManager swAltCustPropMgr = (CustomPropertyManager)swModelDocExt.get_CustomPropertyManager("");
-			
-			
-			// Get ShowChildComponensInBOM value
+
+            // Get ShowChildComponensInBOM value
+			Configuration swConfig = (Configuration)swModelDoc.GetConfigurationByName(strConfigName);
 			int intShowChild;
 			if (swConfig.ShowChildComponentsInBOM) {
 				intShowChild = 1;
@@ -837,7 +834,7 @@ namespace sw_BOM_Scan
 				intShowChild = 0;
 			}
 			
-			// Set parameters
+			// Set query parameters
 			cmdInsertConfigs.Parameters[0].Value = strPathName;
 			cmdInsertConfigs.Parameters[1].Value = strConfigName;
 			cmdInsertConfigs.Parameters[2].Value = 0;
@@ -848,11 +845,13 @@ namespace sw_BOM_Scan
 				string strVal = null;
 				string strResolved = null;
 				
-				swCustPropMgr.Get3(strPropName, false, out strVal, out strResolved);
+				swCustPropMgr.Get4(strPropName, false, out strVal, out strResolved);
+                strResolved = strResolved.Trim();
 				if (strResolved == null || strResolved == "") {
-					swAltCustPropMgr.Get3(strPropName, false, out strVal, out strResolved);
-				}
-				cmdInsertConfigs.Parameters[i+4].Value = strResolved.Trim();
+					swAltCustPropMgr.Get4(strPropName, false, out strVal, out strResolved);
+                    strResolved = strResolved.Trim();
+                }
+				cmdInsertConfigs.Parameters[i+4].Value = strResolved;
 				
 			}
 			
@@ -872,62 +871,71 @@ namespace sw_BOM_Scan
 			//     ModelDoc2 swModelDoc = (ModelDoc2)swComp.GetModelDoc2();
 			// Everything else should be copied exactly.
 			//
-			
-			
-			// Return if the config properties have already been written
-			cmdCheckConfigs.Parameters[0].Value = strPathName;
-			cmdCheckConfigs.Parameters[1].Value = strConfigName;
-			int intExists = Convert.ToInt32(cmdCheckConfigs.ExecuteScalar().ToString());
-			if ( intExists!=0 ) {
-				return; 
-			}
-			
-			// Write status to form label
-			MethodInvoker WriteLabelDelegate = new MethodInvoker(WriteLabel);
-			string strModelName = this.statLabel;
-			this.statLabel = strModelName + "(" + strConfigName + ")" + " ... getting custom properties";
-			Invoke(WriteLabelDelegate);
-			
-			// Get property manager
-			string strWorkingConfig = strConfigName;
-			ModelDocExtension swModelDocExt = (ModelDocExtension)swModelDoc.Extension;
-			CustomPropertyManager swCustPropMgr = (CustomPropertyManager)swModelDocExt.get_CustomPropertyManager(strConfigName);
-			Configuration swConfig = (Configuration)swModelDoc.GetConfigurationByName(strConfigName);
-			
-			// Get property manager for "" (Standard config)
-			CustomPropertyManager swAltCustPropMgr = (CustomPropertyManager)swModelDocExt.get_CustomPropertyManager("");
-			
-			
-			// Get ShowChildComponensInBOM value
-			int intShowChild;
-			if (swConfig.ShowChildComponentsInBOM) {
-				intShowChild = 1;
-			} else {
-				intShowChild = 0;
-			}
-			
-			// Set parameters
-			cmdInsertConfigs.Parameters[0].Value = strPathName;
-			cmdInsertConfigs.Parameters[1].Value = strConfigName;
-			cmdInsertConfigs.Parameters[2].Value = 0;
-			cmdInsertConfigs.Parameters[3].Value = intShowChild;
-			for(int i=0; i < aFieldSequence.Length; i++) {
-				
-				string strPropName = (string)htFieldProp[aFieldSequence[i]];
-				string strVal = null;
-				string strResolved = null;
-				
-				swCustPropMgr.Get3(strPropName, false, out strVal, out strResolved);
-				if (strResolved == null || strResolved == "") {
-					swAltCustPropMgr.Get3(strPropName, false, out strVal, out strResolved);
-				}
-				cmdInsertConfigs.Parameters[i+4].Value = strResolved.Trim();
-				
-			}
-			
-			cmdInsertConfigs.ExecuteNonQuery();
-			
-		}
+
+
+            // Return if the config properties have already been written
+            cmdCheckConfigs.Parameters[0].Value = strPathName;
+            cmdCheckConfigs.Parameters[1].Value = strConfigName;
+            int intExists = Convert.ToInt32(cmdCheckConfigs.ExecuteScalar().ToString());
+            if (intExists != 0)
+            {
+                return;
+            }
+
+            // Write status to form label
+            MethodInvoker WriteLabelDelegate = new MethodInvoker(WriteLabel);
+            string strModelName = this.statLabel;
+            this.statLabel = strModelName + "(" + strConfigName + ")" + " ... getting custom properties";
+            Invoke(WriteLabelDelegate);
+
+            // Get model doc extension
+            ModelDocExtension swModelDocExt = (ModelDocExtension)swModelDoc.Extension;
+
+            // Get property manager for this config
+            CustomPropertyManager swCustPropMgr = (CustomPropertyManager)swModelDocExt.get_CustomPropertyManager(strConfigName);
+
+            // Get property manager for file-system-level (name of standard config = "")
+            CustomPropertyManager swAltCustPropMgr = (CustomPropertyManager)swModelDocExt.get_CustomPropertyManager("");
+
+            // Get ShowChildComponensInBOM value
+            Configuration swConfig = (Configuration)swModelDoc.GetConfigurationByName(strConfigName);
+            int intShowChild;
+            if (swConfig.ShowChildComponentsInBOM)
+            {
+                intShowChild = 1;
+            }
+            else
+            {
+                intShowChild = 0;
+            }
+
+            // Set query parameters
+            cmdInsertConfigs.Parameters[0].Value = strPathName;
+            cmdInsertConfigs.Parameters[1].Value = strConfigName;
+            cmdInsertConfigs.Parameters[2].Value = 0;
+            cmdInsertConfigs.Parameters[3].Value = intShowChild;
+            for (int i = 0; i < aFieldSequence.Length; i++)
+            {
+
+                string strPropName = (string)htFieldProp[aFieldSequence[i]];
+                string strVal = null;
+                string strResolved = null;
+
+                swCustPropMgr.Get4(strPropName, false, out strVal, out strResolved);
+                strResolved = strResolved.Trim();
+                if (strResolved == null || strResolved == "")
+                {
+                    swAltCustPropMgr.Get4(strPropName, false, out strVal, out strResolved);
+                    strResolved = strResolved.Trim();
+                }
+                cmdInsertConfigs.Parameters[i + 4].Value = strResolved;
+
+            }
+
+            // Execute query
+            cmdInsertConfigs.ExecuteNonQuery();
+
+        }
 		
 		
 		

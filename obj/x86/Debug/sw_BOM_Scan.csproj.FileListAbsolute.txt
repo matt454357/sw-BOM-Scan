@@ -13,3 +13,13 @@ D:\dev\sw_BOM_Scan\trunk\bin\Debug\SolidWorks.Interop.swcommands.dll
 D:\dev\sw_BOM_Scan\trunk\bin\Debug\SolidWorks.Interop.swconst.dll
 C:\Users\mtaylor\Documents\GitHub\sw-BOM-Scan\obj\x86\Debug\sw_BOM_Scan.exe
 C:\Users\mtaylor\Documents\GitHub\sw-BOM-Scan\obj\x86\Debug\sw_BOM_Scan.pdb
+C:\Users\mtaylor\Documents\GitHub\sw-BOM-Scan\bin\Debug\sw_BOM_Scan.exe
+C:\Users\mtaylor\Documents\GitHub\sw-BOM-Scan\bin\Debug\sw_BOM_Scan.pdb
+C:\Users\mtaylor\Documents\GitHub\sw-BOM-Scan\bin\Debug\SolidWorks.Interop.sldworks.dll
+C:\Users\mtaylor\Documents\GitHub\sw-BOM-Scan\bin\Debug\SolidWorks.Interop.swcommands.dll
+C:\Users\mtaylor\Documents\GitHub\sw-BOM-Scan\bin\Debug\SolidWorks.Interop.swconst.dll
+C:\Users\mtaylor\Documents\GitHub\sw-BOM-Scan\obj\x86\Debug\sw_BOM_Scan.csprojResolveAssemblyReference.cache
+C:\Users\mtaylor\Documents\GitHub\sw-BOM-Scan\obj\x86\Debug\sw_BOM_Scan.MainForm.resources
+C:\Users\mtaylor\Documents\GitHub\sw-BOM-Scan\obj\x86\Debug\sw_BOM_Scan.csproj.GenerateResource.Cache
+C:\Users\mtaylor\Documents\GitHub\sw-BOM-Scan\bin\Debug\System.Data.SQLite.dll
+C:\Users\mtaylor\Documents\GitHub\sw-BOM-Scan\bin\Debug\System.Data.SQLite.pdb
